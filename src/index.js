@@ -22,7 +22,8 @@ const config = {
 }
 
 //game variables
-const FLAPSTRENGHT = -300;
+const flapStrenght = -300;
+const birdStartPosition = {x: config.width * 0.1, y: config.height / 2}
 
 //game objects
 let bird = null;
@@ -41,18 +42,33 @@ function create() {
   //background image
   this.add.image(0, 0, 'sky').setOrigin(0);
   //the bird sprite
-  bird = this.physics.add.sprite(config.width * 0.1,  config.height / 2, 'bird').setOrigin(0);
+  bird = this.physics.add.sprite(birdStartPosition.x, birdStartPosition.y, 'bird').setOrigin(0);
 
   this.input.keyboard.on('keydown-SPACE', Flap);
 }
 
+
+//if bird y position is smaller than 0 or greater than height of canvas
+//console log you lost
 function update(time, delta) {
-
+  OutOfBoundsDeath();
 }
 
-function Flap(){
-  bird.body.velocity.y = FLAPSTRENGHT;
+function OutOfBoundsDeath() {
+    //check if bird hits upper bound
+    if(bird.y <= 0 -bird.height || bird.y >= config.height){
+      RestartGame();
+    }
 }
 
+function RestartGame() {
+  bird.x = birdStartPosition.x;
+  bird.y = birdStartPosition.y;
+  bird.body.velocity.y  = 0;
+}
+
+function Flap() {
+  bird.body.velocity.y = flapStrenght;
+}
 
 new Phaser.Game(config);
