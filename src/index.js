@@ -10,7 +10,6 @@ const config = {
     //arcade physics plugin handles physics simulation
     default:'arcade',
     arcade:{
-      gravity: {y:400},
       debug: true,
     }
   },
@@ -25,9 +24,12 @@ const config = {
 const flapStrenght = -300;
 const birdStartPosition = {x: config.width * 0.1, y: config.height / 2}
 
+var pipeGap = 110;
+
 //game objects
 let bird = null;
-let totalDelta = null;
+let pipeTop = null;
+let pipeBottom = null;
 
 // Loading assets, such as images, music, etc etc...
 function preload() {
@@ -35,6 +37,7 @@ function preload() {
   //contains functions and properties we can use
   this.load.image('sky', 'assets/sky.png');
   this.load.image('bird', 'assets/bird.png');
+  this.load.image('pipe', 'assets/pipe.png')
 }
 
 function create() {
@@ -43,6 +46,13 @@ function create() {
   this.add.image(0, 0, 'sky').setOrigin(0);
   //the bird sprite
   bird = this.physics.add.sprite(birdStartPosition.x, birdStartPosition.y, 'bird').setOrigin(0);
+  bird.body.gravity.y =  500;
+
+  //MakePipes();
+  let pipePositions = MakePipes();
+  pipeTop = this.physics.add.sprite(500, pipePositions.x, 'pipe').setOrigin(0, 1);
+  pipeBottom = this.physics.add.sprite(500, pipePositions.y, 'pipe').setOrigin(0, 0);
+
 
   this.input.keyboard.on('keydown-SPACE', Flap);
 }
@@ -69,6 +79,14 @@ function RestartGame() {
 
 function Flap() {
   bird.body.velocity.y = flapStrenght;
+}
+
+function MakePipes(){
+
+let spawnRange = config.height - pipeGap;
+let randomPosition = Math.floor(Math.random() * spawnRange)
+
+return {x: randomPosition, y: randomPosition + pipeGap};
 }
 
 new Phaser.Game(config);
