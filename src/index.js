@@ -33,8 +33,6 @@ let pipeBottom = null;
 
 // Loading assets, such as images, music, etc etc...
 function preload() {
-  // 'this' context - scene
-  //contains functions and properties we can use
   this.load.image('sky', 'assets/sky.png');
   this.load.image('bird', 'assets/bird.png');
   this.load.image('pipe', 'assets/pipe.png')
@@ -44,16 +42,17 @@ function create() {
 
   //background image
   this.add.image(0, 0, 'sky').setOrigin(0);
+
   //the bird sprite
   bird = this.physics.add.sprite(birdStartPosition.x, birdStartPosition.y, 'bird').setOrigin(0);
   bird.body.gravity.y =  500;
 
-  //MakePipes();
+  //spawn the obstacles
   let pipePositions = MakePipes();
   pipeTop = this.physics.add.sprite(500, pipePositions.x, 'pipe').setOrigin(0, 1);
   pipeBottom = this.physics.add.sprite(500, pipePositions.y, 'pipe').setOrigin(0, 0);
 
-
+  //callBack Functions
   this.input.keyboard.on('keydown-SPACE', Flap);
 }
 
@@ -82,11 +81,9 @@ function Flap() {
 }
 
 function MakePipes(){
-
-let spawnRange = config.height - pipeGap;
-let randomPosition = Math.floor(Math.random() * spawnRange)
-
-return {x: randomPosition, y: randomPosition + pipeGap};
+  let spawnRange = config.height - pipeGap;
+  let randomPosition = Math.floor(Math.random() * spawnRange)
+  return {x: randomPosition, y: randomPosition + pipeGap};
 }
 
 new Phaser.Game(config);
